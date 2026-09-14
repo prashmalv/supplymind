@@ -1,0 +1,34 @@
+# Local dev dependencies for the SupplyMind API.
+# Postgres ships with the pgvector extension (needed for RAG in Phase 6).
+# Start with: docker compose up -d
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: supplymind-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: supplymind
+      POSTGRES_PASSWORD: supplymind
+      POSTGRES_DB: supplymind
+    ports:
+      - '5432:5432'
+    volumes:
+      - supplymind_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U supplymind']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: supplymind-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - supplymind_redis:/data
+
+volumes:
+  supplymind_pg:
+  supplymind_redis:

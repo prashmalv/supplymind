@@ -1,0 +1,8 @@
+{
+  "name": "Supply Mind",
+  "description": "An intelligent supply chain optimization platform for pharmaceutical operations featuring autonomous decisioning, digital twin simulation, and risk prediction.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}

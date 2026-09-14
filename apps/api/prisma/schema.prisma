@@ -1,0 +1,137 @@
+// SupplyMind platform schema.
+// Phase 1: multi-tenancy (orgs), identity (users), RBAC (memberships), auth (refresh tokens).
+// Later phases add connectors, ingestion, canonical SAP data, alerts, documents.
+
+generator client {
+  provider      = "prisma-client-js"
+  // native = local dev (macOS); debian target = the Linux container/App Service.
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PLATFORM_ADMIN
+  ORG_ADMIN
+  ANALYST
+  VIEWER
+}
+
+enum OrgStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum UserStatus {
+  ACTIVE
+  INVITED
+  DISABLED
+}
+
+model Organization {
+  id           String       @id @default(uuid()) @db.Uuid
+  name         String
+  slug         String       @unique
+  industry     String?
+  timezone     String       @default("UTC")
+  baseCurrency String       @default("USD")
+  status       OrgStatus    @default(ACTIVE)
+  isDemo       Boolean      @default(false)
+  // Sample dataset that powers the demo MIS for this org (e.g. "bajaj-energy",
+  // "demo"). Replaced by real connector-ingested data in later phases.
+  demoDatasetKey String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  memberships  Membership[]
+  automations  Automation[]
+
+  @@map("organization")
+}
+
+model User {
+  id            String        @id @default(uuid()) @db.Uuid
+  email         String        @unique
+  name          String
+  passwordHash  String?
+  status        UserStatus    @default(ACTIVE)
+  isPlatformAdmin Boolean     @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  memberships   Membership[]
+  refreshTokens RefreshToken[]
+  invites       Invite[]      @relation("InvitedBy")
+  automations   Automation[]
+
+  @@map("app_user")
+}
+
+model Membership {
+  id        String       @id @default(uuid()) @db.Uuid
+  orgId     String       @db.Uuid
+  userId    String       @db.Uuid
+  role      Role         @default(VIEWER)
+  createdAt DateTime     @default(now())
+
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, userId])
+  @@index([userId])
+  @@map("membership")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  tokenHash String   @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_token")
+}
+
+model Invite {
+  id          String   @id @default(uuid()) @db.Uuid
+  orgId       String   @db.Uuid
+  email       String
+  role        Role     @default(VIEWER)
+  tokenHash   String   @unique
+  invitedById String?  @db.Uuid
+  acceptedAt  DateTime?
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  invitedBy   User?    @relation("InvitedBy", fields: [invitedById], references: [id], onDelete: SetNull)
+
+  @@index([orgId])
+  @@map("invite")
+}
+
+model Automation {
+  id        String   @id @default(uuid()) @db.Uuid
+  orgId     String   @db.Uuid
+  userId    String   @db.Uuid
+  title     String
+  condition String
+  action    String   @default("email")
+  target    String?
+  active    Boolean  @default(true)
+  lastRunAt DateTime?
+  createdAt DateTime @default(now())
+
+  org  Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([userId])
+  @@map("automation")
+}

@@ -1,0 +1,140 @@
+import { SiteDataset } from './types';
+
+// Generic pharmaceutical distribution demo (the original SupplyMind sample),
+// kept so the seeded "Demo Organization" also renders the MIS screens.
+const CUR = 'USD';
+
+export const demoPharmaDataset: SiteDataset = {
+  key: 'demo',
+  executive: {
+    orgName: 'Demo Organization',
+    sector: 'Pharmaceutical Distribution',
+    currency: CUR,
+    headline: [
+      { label: 'OTIF', value: '94.2%', delta: '-0.8%', status: 'warning', sublabel: 'Target 95%' },
+      { label: 'Forecast MAPE', value: '12.5%', delta: '+0.4%', status: 'warning' },
+      { label: 'Inventory Coverage', value: '4.2 wks', status: 'neutral' },
+      { label: 'Procurement Spend (YTD)', value: '$182M', delta: '+3.1%', status: 'neutral' },
+      { label: 'Working Capital', value: '$14.5M', status: 'warning', sublabel: 'Tied in inventory' },
+      { label: 'Active Shipments', value: '65', status: 'neutral' },
+    ],
+    generationTrend: [
+      { period: 'Oct', actual: 71200, plan: 68000 },
+      { period: 'Nov', actual: 73100, plan: 70000 },
+      { period: 'Dec', actual: 68900, plan: 72500 },
+      { period: 'Jan', actual: 74500, plan: 71000 },
+      { period: 'Feb', actual: 78200, plan: 73000 },
+      { period: 'Mar', actual: 81000, plan: 75000 },
+    ],
+    spendByCategory: [
+      { name: 'Biologics API', value: 78 },
+      { name: 'Oncology', value: 42 },
+      { name: 'Plasma-Derived', value: 28 },
+      { name: 'Packaging', value: 20 },
+      { name: 'Logistics', value: 14 },
+    ],
+    alertsSummary: { critical: 0, warning: 2, info: 1 },
+  },
+  procurement: {
+    currency: CUR,
+    kpis: [
+      { label: 'Total Spend (YTD)', value: '$182M', raw: 182, delta: '+3.1%', status: 'neutral' },
+      { label: 'PO Cycle Time', value: '11.4 days', raw: 11.4, status: 'warning' },
+      { label: 'On-Time Delivery', value: '94.2%', raw: 94.2, status: 'warning' },
+      { label: 'Open PO Value', value: '$21M', raw: 21, status: 'neutral', sublabel: '54 open POs' },
+      { label: 'Maverick Spend', value: '4.8%', raw: 4.8, status: 'positive' },
+      { label: 'Active Vendors', value: '5', raw: 5, status: 'neutral' },
+    ],
+    monthlySpendSeries: [
+      { key: 'coal', label: 'Biologics API' },
+      { key: 'spares', label: 'Oncology' },
+      { key: 'chemicals', label: 'Plasma' },
+      { key: 'fuel', label: 'Packaging' },
+      { key: 'services', label: 'Logistics' },
+    ],
+    monthlySpend: [
+      { period: 'Oct', coal: 12, spares: 6, chemicals: 3, fuel: 2, services: 2 },
+      { period: 'Nov', coal: 13, spares: 5, chemicals: 3, fuel: 2, services: 3 },
+      { period: 'Dec', coal: 12, spares: 7, chemicals: 2, fuel: 3, services: 2 },
+      { period: 'Jan', coal: 14, spares: 5, chemicals: 3, fuel: 2, services: 3 },
+      { period: 'Feb', coal: 13, spares: 6, chemicals: 3, fuel: 2, services: 2 },
+      { period: 'Mar', coal: 13, spares: 6, chemicals: 3, fuel: 2, services: 3 },
+    ],
+    spendByCategory: [
+      { name: 'Biologics API', value: 78 },
+      { name: 'Oncology', value: 42 },
+      { name: 'Plasma-Derived', value: 28 },
+      { name: 'Packaging', value: 20 },
+      { name: 'Logistics', value: 14 },
+    ],
+    spendByPlant: [
+      { name: 'Frankfurt Hub', value: 62 },
+      { name: 'Los Angeles DC', value: 48 },
+      { name: 'Dubai Hub', value: 40 },
+      { name: 'Narita', value: 32 },
+    ],
+    topVendors: [
+      { vendor: 'Lonza Visp', category: 'Biologics API', spend: 78, onTimePct: 96, qualityPct: 99, reliability: 'High' },
+      { vendor: 'Takeda Hikari', category: 'Oncology', spend: 42, onTimePct: 88, qualityPct: 99, reliability: 'Medium' },
+      { vendor: 'Baxter', category: 'Plasma-Derived', spend: 28, onTimePct: 99, qualityPct: 98, reliability: 'High' },
+      { vendor: 'Vetter Pharma', category: 'Packaging', spend: 20, onTimePct: 94, qualityPct: 99, reliability: 'High' },
+      { vendor: 'Patheon Italy', category: 'Manufacturing', spend: 14, onTimePct: 85, qualityPct: 96, reliability: 'Medium' },
+    ],
+    onTimeByVendor: [
+      { name: 'Lonza', value: 96 },
+      { name: 'Takeda', value: 88 },
+      { name: 'Baxter', value: 99 },
+      { name: 'Vetter', value: 94 },
+      { name: 'Patheon', value: 85 },
+    ],
+    openPos: [
+      { poNumber: 'PO-90012', vendor: 'Takeda Hikari', material: 'Alunbrig API', plant: 'Narita', value: 3.2, currency: CUR, deliveryDate: '2026-03-22', daysOverdue: 2, status: 'overdue' },
+      { poNumber: 'PO-90034', vendor: 'Lonza Visp', material: 'Entyvio API', plant: 'Frankfurt Hub', value: 5.1, currency: CUR, deliveryDate: '2026-03-30', daysOverdue: 0, status: 'due_soon' },
+      { poNumber: 'PO-90051', vendor: 'Baxter', material: 'Gammagard', plant: 'Los Angeles DC', value: 2.8, currency: CUR, deliveryDate: '2026-04-04', daysOverdue: 0, status: 'on_track' },
+    ],
+  },
+  inventory: {
+    currency: CUR,
+    kpis: [
+      { label: 'Total Inventory Value', value: '$14.5M', raw: 14.5, status: 'warning' },
+      { label: 'Coverage', value: '4.2 wks', raw: 4.2, status: 'neutral' },
+      { label: 'Turnover', value: '6.1x', raw: 6.1, status: 'positive' },
+      { label: 'Slow-Moving', value: '$1.2M', raw: 1.2, status: 'warning' },
+      { label: 'Expiry Risk', value: '$45k', raw: 0.045, status: 'warning' },
+      { label: 'Below Safety Stock', value: '1 item', raw: 1, status: 'negative', sublabel: 'PROD-B' },
+    ],
+    valueByCategory: [
+      { name: 'Biologics', value: 5.6 },
+      { name: 'Oncology', value: 2.7 },
+      { name: 'Plasma', value: 3.1 },
+      { name: 'Rare Disease', value: 1.9 },
+      { name: 'Neuroscience', value: 1.2 },
+    ],
+    agingBuckets: [
+      { name: '0-30 days', value: 8.1 },
+      { name: '30-60 days', value: 3.6 },
+      { name: '60-90 days', value: 1.6 },
+      { name: '90+ days', value: 1.2 },
+    ],
+    coalStockByPlant: [],
+    abcXyz: [
+      { cell: 'AX', count: 2, value: 8.7 },
+      { cell: 'AZ', count: 1, value: 2.7 },
+      { cell: 'BY', count: 1, value: 1.9 },
+      { cell: 'CX', count: 1, value: 1.2 },
+    ],
+    items: [
+      { material: 'Entyvio SubQ', code: 'PROD-A', category: 'Biologics', plant: 'Frankfurt Hub', onHand: 12500, uom: 'EA', safetyStock: 5000, reorderPoint: 7000, daysOfSupply: 83, value: 5.6, abcClass: 'A', xyzClass: 'X', status: 'ok' },
+      { material: 'Alunbrig', code: 'PROD-B', category: 'Oncology', plant: 'Narita', onHand: 3200, uom: 'EA', safetyStock: 4000, reorderPoint: 5500, daysOfSupply: 30, value: 2.7, abcClass: 'A', xyzClass: 'Z', status: 'below_safety' },
+      { material: 'Gammagard', code: 'PROD-C', category: 'Plasma', plant: 'Los Angeles DC', onHand: 18000, uom: 'EA', safetyStock: 10000, reorderPoint: 13000, daysOfSupply: 58, value: 3.1, abcClass: 'A', xyzClass: 'X', status: 'ok' },
+      { material: 'Takhzyro', code: 'PROD-D', category: 'Rare Disease', plant: 'Frankfurt Hub', onHand: 5600, uom: 'EA', safetyStock: 2000, reorderPoint: 3000, daysOfSupply: 120, value: 1.9, abcClass: 'B', xyzClass: 'Y', status: 'ok' },
+      { material: 'Vyvanse', code: 'PROD-E', category: 'Neuroscience', plant: 'Los Angeles DC', onHand: 50000, uom: 'EA', safetyStock: 25000, reorderPoint: 30000, daysOfSupply: 32, value: 1.2, abcClass: 'C', xyzClass: 'X', status: 'ok' },
+    ],
+  },
+  alerts: [
+    { id: 'dm-1', severity: 'warning', title: 'Cold Chain Excursion Risk', message: 'TRK-998 (Gammagard) at 6.8°C near Dubai hub, approaching 8°C limit.', category: 'Logistics', recommendation: 'Reroute to temp-controlled storage at Dubai Hub.' },
+    { id: 'dm-2', severity: 'warning', title: 'Supplier Delay Forecast', message: 'Lonza API for Entyvio delayed 3 days (weather in Visp).', category: 'Planning', recommendation: 'Consume buffer; accelerate next PO by 3 days.' },
+    { id: 'dm-3', severity: 'info', title: 'Alunbrig Below Safety Stock', message: 'PROD-B at 3,200 vs 4,000 safety stock.', category: 'Inventory', recommendation: 'Emergency replenishment from Takeda Hikari.' },
+  ],
+  aiContext: `You are advising a global pharmaceutical distributor. Key metrics: OTIF 94.2% (target 95%), forecast MAPE 12.5%, inventory coverage 4.2 weeks, working capital $14.5M. PROD-B (Alunbrig, oncology) is below safety stock. Vendors: Lonza Visp, Takeda Hikari, Baxter, Vetter, Patheon. Lead with the number, then the insight, then an action.`,
+};
