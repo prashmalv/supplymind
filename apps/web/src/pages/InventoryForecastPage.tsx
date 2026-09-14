@@ -3,8 +3,10 @@ import {
   ResponsiveContainer, ComposedChart, Area, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ReferenceLine, Legend,
 } from 'recharts';
 import { MaterialForecast } from '@supplymind/shared';
+import { Search } from 'lucide-react';
 import { useForecastMis } from '../lib/misApi';
 import { KpiCard, ChartCard, DarkTooltip, Loading, PageHeader, ExportBtn } from '../components/mis/kit';
+import { DrillDown, ExplorerData } from '../components/mis/DataExplorer';
 import { getCategorical, getChrome, STATUS } from '../lib/viz';
 import { useTheme } from '../theme/ThemeProvider';
 
@@ -30,6 +32,16 @@ const ForecastBadge: React.FC<{ status: MaterialForecast['status'] }> = ({ statu
 // MAPE → accuracy quality colour (lower error = greener).
 const mapeColor = (m: number) => (m <= 8 ? STATUS.good : m <= 15 ? '#b45309' : STATUS.critical);
 
+const ExploreBtn: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+  <button onClick={onClick} className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/10 rounded-md px-2 py-1 transition-colors" title="Search, filter & export">
+    <Search size={12} /> Explore
+  </button>
+);
+
+const REC_COLS = ['Material', 'Code', 'Category', 'Plant', 'Method', 'MAPE %', 'On-hand', 'Current Safety', 'Recommended Safety', 'Reorder Point', 'Lead Time (d)', 'Service Level %', 'Stock-out (days)', 'Recommended Order Qty', 'Status'];
+const recRows = (list: MaterialForecast[]): (string | number)[][] =>
+  list.map((m) => [m.material, m.code, m.category, m.plant, m.method, m.mape, m.currentStock, m.safetyStock, m.recommendedSafety, m.reorderPoint, m.leadTimeDays, m.serviceLevel, m.stockoutInDays ?? '—', m.recommendedOrderQty, STATUS_META[m.status].label]);
+
 export const InventoryForecastPage: React.FC = () => {
   const { theme } = useTheme();
   const CHROME = getChrome(theme);
@@ -41,6 +53,7 @@ export const InventoryForecastPage: React.FC = () => {
   };
   const { data, isLoading } = useForecastMis();
   const [selected, setSelected] = useState(0);
+  const [drill, setDrill] = useState<ExplorerData | null>(null);
 
   const materials = data?.materials ?? [];
   const active = materials[selected];
@@ -65,6 +78,9 @@ export const InventoryForecastPage: React.FC = () => {
       </div>
     );
 
+  const openRecs = (title: string, list: MaterialForecast[]) => setDrill({ title, subtitle: 'AI-recommended safety stock vs SAP MARC — search, filter & export', columns: REC_COLS, rows: recRows(list) });
+  const openSeries = () => setDrill({ title: `Demand Forecast · ${active.material}`, subtitle: `${active.method} · MAPE ${active.mape}% · history + 4-month forecast with 95% band`, columns: ['Period', `Actual (${active.uom})`, `Forecast (${active.uom})`, 'Band Low', 'Band High'], rows: active.series.map((p) => [p.period, p.actual ?? '—', p.forecast ?? '—', p.band ? p.band[0] : '—', p.band ? p.band[1] : '—']) });
+
   return (
     <div>
       <PageHeader
@@ -80,10 +96,11 @@ export const InventoryForecastPage: React.FC = () => {
         {/* Demand forecast with confidence band */}
         <ChartCard
           title="Demand Forecast"
-          subtitle={`${active.material} (${active.code}) · ${active.method} · MAPE ${active.mape}% · shaded = 95% confidence band`}
+          subtitle={`${active.material} (${active.code}) · ${active.method} · MAPE ${active.mape}% · shaded = 95% band · click chart to explore`}
           className="lg:col-span-2"
         >
-          <div className="flex flex-wrap gap-1.5 mb-3">
+          <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex flex-wrap gap-1.5">
             {materials.map((m, i) => (
               <button
                 key={m.code}
@@ -98,8 +115,10 @@ export const InventoryForecastPage: React.FC = () => {
               </button>
             ))}
           </div>
+            <ExploreBtn onClick={openSeries} />
+          </div>
           <ResponsiveContainer width="100%" height={280}>
-            <ComposedChart data={chartData} margin={{ top: 12, right: 16, left: 0, bottom: 0 }}>
+            <ComposedChart data={chartData} margin={{ top: 12, right: 16, left: 0, bottom: 0 }} style={{ cursor: 'pointer' }} onClick={openSeries}>
               <CartesianGrid stroke={CHROME.grid} vertical={false} />
               <XAxis dataKey="period" {...axisProps} />
               <YAxis {...axisProps} width={52} />
@@ -143,7 +162,7 @@ export const InventoryForecastPage: React.FC = () => {
         </ChartCard>
 
         {/* Forecast accuracy by category */}
-        <ChartCard title="Forecast Accuracy by Category" subtitle="MAPE % — lower is better (target ≤ 8%)">
+        <ChartCard title="Forecast Accuracy by Category" subtitle="MAPE % — lower is better (target ≤ 8%) · click a bar for its materials">
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={data.accuracyByCategory} layout="vertical" margin={{ top: 4, right: 40, left: 8, bottom: 0 }}>
               <CartesianGrid stroke={CHROME.grid} horizontal={false} />
@@ -151,7 +170,9 @@ export const InventoryForecastPage: React.FC = () => {
               <YAxis type="category" dataKey="name" {...axisProps} width={92} />
               <Tooltip content={<DarkTooltip unit="% MAPE" />} cursor={{ fill: 'rgba(120,120,120,0.08)' }} />
               <ReferenceLine x={8} stroke={STATUS.good} strokeDasharray="4 4" label={{ value: 'target', fill: STATUS.good, fontSize: 10, position: 'top' }} />
-              <Bar dataKey="value" name="MAPE" radius={[0, 4, 4, 0]} isAnimationActive={false} label={{ position: 'right', fill: CHROME.textSecondary, fontSize: 11, formatter: (v: number) => `${v}%` }}>
+              <Bar dataKey="value" name="MAPE" radius={[0, 4, 4, 0]} isAnimationActive={false} cursor="pointer"
+                onClick={(d: any) => openRecs(`Forecast · ${d?.name}`, materials.filter((m) => m.category === d?.name))}
+                label={{ position: 'right', fill: CHROME.textSecondary, fontSize: 11, formatter: (v: number) => `${v}%` }}>
                 {data.accuracyByCategory.map((d, i) => <Cell key={i} fill={mapeColor(d.value)} />)}
               </Bar>
             </BarChart>
@@ -164,12 +185,9 @@ export const InventoryForecastPage: React.FC = () => {
         title="Safety-Stock Optimization & Reorder Recommendations"
         subtitle="AI-recommended safety stock vs SAP MARC · reorder qty · service level"
       >
-        <div className="flex justify-end mb-2">
-          <ExportBtn
-            filename="forecast-recommendations"
-            columns={['Material', 'Code', 'Category', 'Plant', 'Method', 'MAPE %', 'On-hand', 'Current Safety', 'Recommended Safety', 'Reorder Point', 'Lead Time (d)', 'Service Level %', 'Stock-out (days)', 'Recommended Order Qty', 'Status']}
-            rows={materials.map((m) => [m.material, m.code, m.category, m.plant, m.method, m.mape, m.currentStock, m.safetyStock, m.recommendedSafety, m.reorderPoint, m.leadTimeDays, m.serviceLevel, m.stockoutInDays ?? '—', m.recommendedOrderQty, STATUS_META[m.status].label])}
-          />
+        <div className="flex justify-end gap-1.5 mb-2">
+          <ExploreBtn onClick={() => openRecs('Safety-Stock & Reorder Recommendations', materials)} />
+          <ExportBtn filename="forecast-recommendations" columns={REC_COLS} rows={recRows(materials)} />
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -188,7 +206,7 @@ export const InventoryForecastPage: React.FC = () => {
             </thead>
             <tbody>
               {materials.map((m) => (
-                <tr key={m.code} className={`${rowBorder} hover:bg-slate-100/60 dark:hover:bg-white/[0.02]`}>
+                <tr key={m.code} className={`${rowBorder} hover:bg-slate-100/60 dark:hover:bg-white/[0.02] cursor-pointer`} onClick={() => openRecs(`Forecast · ${m.category}`, materials.filter((x) => x.category === m.category))}>
                   <td className="py-2 pr-3">
                     <div className="text-slate-700 dark:text-slate-200 truncate max-w-[200px]">{m.material}</div>
                     <div className="text-[10px] text-slate-500">{m.code} · {m.plant} · {m.category}</div>
@@ -219,6 +237,8 @@ export const InventoryForecastPage: React.FC = () => {
           Figures are model-generated on sample consumption history for demonstration.
         </p>
       </ChartCard>
+
+      <DrillDown data={drill} onClose={() => setDrill(null)} />
     </div>
   );
 };

@@ -18,6 +18,15 @@ export interface NamedValue {
   value: number;
 }
 
+/** An operating company / unit within an organization, and the plants (sites)
+ *  it owns. Drives the Unit → Location filter hierarchy. */
+export interface OrgUnit {
+  key: string;        // stable id, e.g. "lpgcl"
+  name: string;       // display, e.g. "LPGCL — Lalitpur"
+  short: string;      // compact chip label, e.g. "LPGCL"
+  plants: string[];   // plant/site names owned by this unit
+}
+
 export interface TrendPoint {
   period: string;
   [series: string]: string | number;
@@ -103,6 +112,7 @@ export interface ApprovalStage {
 export interface ProcurementMis {
   currency: string;
   kpis: KpiTile[];
+  units?: OrgUnit[];                 // Unit → Location hierarchy (merged in by the service)
   monthlySpend: TrendPoint[];        // { period, <seriesKey>... }
   // Labels for the stacked monthly-spend series (per sector). Falls back to
   // generic keys if omitted.
@@ -187,6 +197,7 @@ export interface CriticalSpare {
 export interface InventoryMis {
   currency: string;
   kpis: KpiTile[];
+  units?: OrgUnit[];                 // Unit → Location hierarchy (merged in by the service)
   valueByCategory: NamedValue[];
   agingBuckets: NamedValue[];        // 0-30, 30-60, 60-90, 90+ (value)
   coalStockByPlant: PlantCoalStock[];
@@ -246,6 +257,7 @@ export interface MaterialForecast {
 export interface ForecastMis {
   currency: string;
   kpis: KpiTile[];
+  units?: OrgUnit[];
   accuracyByCategory: NamedValue[];  // MAPE by category
   materials: MaterialForecast[];
 }

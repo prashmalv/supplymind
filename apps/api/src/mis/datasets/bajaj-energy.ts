@@ -12,6 +12,16 @@ const CUR = 'INR';
 export const bajajEnergyDataset: SiteDataset = {
   key: 'bajaj-energy',
 
+  // Two operating companies: LPGCL (Lalitpur 3x660 MW supercritical, acquired)
+  // and Bajaj Energy Ltd (five 90 MW plants across UP). Drives Unit → Location.
+  units: [
+    { key: 'lpgcl', name: 'LPGCL — Lalitpur', short: 'LPGCL', plants: ['Lalitpur'] },
+    {
+      key: 'bajaj', name: 'Bajaj Energy (5×90 MW)', short: 'Bajaj Energy',
+      plants: ['Barkhera', 'Maqsoodapur', 'Khambarkhera', 'Kundarkhi', 'Utraula'],
+    },
+  ],
+
   executive: {
     orgName: 'Bajaj Energy',
     sector: 'Thermal Power Generation',
@@ -454,6 +464,151 @@ export const bajajEnergyDataset: SiteDataset = {
         ['Inventory Turnover', '3.8x', '4.0x', 'Below'],
         ['Excess/Obsolete', '₹58 Cr', '< ₹60 Cr', 'On Track'],
         ['Emergency Procurement', '18 cases', '< 15', 'Above'],
+      ],
+    },
+
+    // ─── Monthly MIS reports (SOW) — Month column enables month/date filtering ───
+
+    // Stock & consumption
+    {
+      key: 'monthly-stock-statement', name: 'Monthly Stock Statement', group: 'Inventory',
+      description: 'Opening / receipt / issue / closing per material (SAP MB5B), month-wise.',
+      columns: ['Month', 'Material', 'Plant', 'Opening', 'Receipt', 'Issue', 'Closing', 'Value (₹ Cr)'],
+      rows: [
+        ['Mar 2026', 'Steam Coal G11', 'Lalitpur', 246000, 742000, 780000, 208000, 520.0],
+        ['Mar 2026', 'FGD Limestone', 'Lalitpur', 6100, 4400, 4700, 5800, 4.9],
+        ['Mar 2026', 'Turbine Lube Oil ISO-46', 'Lalitpur', 41, 5, 8, 38, 1.9],
+        ['Mar 2026', 'ID Fan Bearing', 'Barkhera', 4, 1, 2, 3, 1.1],
+        ['Feb 2026', 'Steam Coal G11', 'Lalitpur', 268000, 761000, 783000, 246000, 615.0],
+        ['Feb 2026', 'FGD Limestone', 'Lalitpur', 5900, 4410, 4210, 6100, 5.2],
+        ['Feb 2026', 'Coal Mill Grinding Roll', 'Lalitpur', 11, 5, 4, 12, 9.6],
+        ['Jan 2026', 'Steam Coal G11', 'Lalitpur', 240000, 838000, 810000, 268000, 670.0],
+        ['Jan 2026', 'Cation Exchange Resin', 'Barkhera', 3, 1, 2, 2, 0.8],
+      ],
+    },
+    {
+      key: 'monthly-consumption-budget', name: 'Material Consumption vs Budget', group: 'Inventory',
+      description: 'Actual consumption against budgeted quantity, month & category-wise.',
+      columns: ['Month', 'Category', 'Plant', 'Budget Qty', 'Actual Qty', 'Variance %', 'Status'],
+      rows: [
+        ['Mar 2026', 'Coal', 'Lalitpur', 760000, 780000, 2.6, 'Over'],
+        ['Mar 2026', 'Chemicals', 'Lalitpur', 4600, 4700, 2.2, 'Over'],
+        ['Mar 2026', 'Consumables', 'Lalitpur', 9, 8, -11.1, 'Under'],
+        ['Feb 2026', 'Coal', 'Lalitpur', 770000, 783000, 1.7, 'Over'],
+        ['Feb 2026', 'Chemicals', 'Barkhera', 2, 2, 0.0, 'On Track'],
+        ['Jan 2026', 'Coal', 'Lalitpur', 800000, 810000, 1.3, 'Over'],
+      ],
+    },
+    {
+      key: 'monthly-receipt-issue', name: 'Receipt & Issue Register', group: 'Inventory',
+      description: 'Material movements by movement type (SAP MB51 · MSEG BWART), month-wise.',
+      columns: ['Month', 'Mvt Type', 'Material', 'Plant', 'Qty', 'UoM', 'Value (₹ Cr)'],
+      rows: [
+        ['Mar 2026', '101 GR', 'Steam Coal G11', 'Lalitpur', 742000, 'MT', 366.0],
+        ['Mar 2026', '261 GI', 'Steam Coal G11', 'Lalitpur', 780000, 'MT', 385.0],
+        ['Mar 2026', '101 GR', 'FGD Limestone', 'Lalitpur', 4400, 'MT', 3.7],
+        ['Mar 2026', '551 Scrap', 'Scrap Steel', 'Lalitpur', 410, 'MT', 0.4],
+        ['Feb 2026', '101 GR', 'Steam Coal G11', 'Lalitpur', 761000, 'MT', 375.0],
+        ['Feb 2026', '261 GI', 'Coal Mill Grinding Roll', 'Lalitpur', 4, 'NO', 3.2],
+        ['Jan 2026', '101 GR', 'Steam Coal G11', 'Lalitpur', 838000, 'MT', 413.0],
+      ],
+    },
+
+    // Procurement monthly
+    {
+      key: 'monthly-procurement-summary', name: 'Monthly Procurement Summary', group: 'Procurement',
+      description: 'PO count, PO value and GRN value by category, month-wise.',
+      columns: ['Month', 'Category', 'PO Count', 'PO Value (₹ Cr)', 'GRN Value (₹ Cr)'],
+      rows: [
+        ['Mar 2026', 'Coal', 38, 348, 331],
+        ['Mar 2026', 'O&M Spares', 46, 38, 34],
+        ['Mar 2026', 'Chemicals', 22, 18, 17],
+        ['Feb 2026', 'Coal', 34, 331, 340],
+        ['Feb 2026', 'O&M Spares', 41, 33, 36],
+        ['Jan 2026', 'Coal', 41, 372, 360],
+        ['Jan 2026', 'Fuel Oil', 12, 14, 14],
+      ],
+    },
+    {
+      key: 'monthly-po-register', name: 'Monthly PO Register', group: 'Procurement',
+      description: 'All purchase orders released in the month (SAP EKKO/EKPO).',
+      columns: ['Month', 'PO No', 'Vendor', 'Material', 'Plant', 'Value (₹ Cr)', 'Status'],
+      rows: [
+        ['Mar 2026', '45010023', 'Northern Coalfields Ltd', 'Steam Coal G11', 'Lalitpur', 118.5, 'Open'],
+        ['Mar 2026', '45010078', 'Siemens Energy', 'Turbine Blade Stage-3', 'Lalitpur', 12.4, 'Overdue'],
+        ['Mar 2026', '45010134', 'Thermax', 'FGD Limestone Dosing', 'Lalitpur', 4.9, 'Overdue'],
+        ['Feb 2026', '45009971', 'Adani Enterprises', 'Imported Coal', 'Lalitpur', 38.1, 'Closed'],
+        ['Feb 2026', '45009945', 'Thermax', 'DM Chemicals', 'Barkhera', 4.2, 'Closed'],
+        ['Jan 2026', '45009900', 'Northern Coalfields Ltd', 'Steam Coal G11', 'Lalitpur', 62.4, 'Closed'],
+      ],
+    },
+    {
+      key: 'monthly-grn-register', name: 'Monthly GRN Register', group: 'Procurement',
+      description: 'Goods receipts posted in the month (SAP MIGO · MSEG 101).',
+      columns: ['Month', 'GRN No', 'PO No', 'Vendor', 'Material', 'Qty', 'Value (₹ Cr)'],
+      rows: [
+        ['Mar 2026', '50042231', '45009900', 'Northern Coalfields Ltd', 'Steam Coal G11', '12 rakes', 62.4],
+        ['Mar 2026', '50042248', '45010060', 'BHEL', 'Mill Grinding Roll', '4 NO', 3.2],
+        ['Feb 2026', '50041980', '45009971', 'Adani Enterprises', 'Imported Coal', '3 parcels', 38.1],
+        ['Feb 2026', '50041955', '45010002', 'Indian Oil', 'HFO', '120 KL', 1.4],
+        ['Jan 2026', '50041710', '45009880', 'Central Coalfields Ltd', 'Steam Coal G12', '9 rakes', 44.0],
+      ],
+    },
+
+    // Vendor & payment
+    {
+      key: 'monthly-vendor-performance', name: 'Monthly Vendor Performance', group: 'Vendor',
+      description: 'On-time and quality performance by vendor, month-wise.',
+      columns: ['Month', 'Vendor', 'PO Count', 'On-time %', 'Quality %', 'Value (₹ Cr)'],
+      rows: [
+        ['Mar 2026', 'Northern Coalfields Ltd', 18, 92, 98, 348],
+        ['Mar 2026', 'BHEL', 46, 87, 99, 38],
+        ['Mar 2026', 'Siemens Energy', 3, 90, 99, 12],
+        ['Feb 2026', 'Central Coalfields Ltd', 14, 94, 97, 331],
+        ['Feb 2026', 'Thermax', 11, 93, 98, 18],
+        ['Jan 2026', 'Adani Enterprises', 8, 96, 95, 372],
+      ],
+    },
+    {
+      key: 'monthly-payment-ageing', name: 'Monthly Payment / Outstanding Ageing', group: 'Vendor',
+      description: 'Vendor outstanding and ageing buckets (SAP FBL1N), month-wise.',
+      columns: ['Month', 'Vendor', 'Outstanding (₹ Cr)', '0-30 d', '31-60 d', '60+ d'],
+      rows: [
+        ['Mar 2026', 'Northern Coalfields Ltd', 214, 148, 46, 20],
+        ['Mar 2026', 'Central Coalfields Ltd', 96, 71, 18, 7],
+        ['Mar 2026', 'BHEL', 34, 22, 8, 4],
+        ['Feb 2026', 'Northern Coalfields Ltd', 198, 140, 42, 16],
+        ['Feb 2026', 'Thermax', 18, 13, 4, 1],
+      ],
+    },
+    {
+      key: 'monthly-msme-compliance', name: 'MSME Payment Compliance', group: 'Vendor',
+      description: 'MSME dues and 45-day payment compliance (MSMED Act), month-wise.',
+      columns: ['Month', 'Vendor', 'Invoice Value (₹ Cr)', 'Paid ≤45d %', 'Overdue (₹ Cr)', 'Status'],
+      rows: [
+        ['Mar 2026', 'Vindhya Engineering Works', 6.4, 88, 0.6, 'Watch'],
+        ['Mar 2026', 'Bundelkhand Fabricators', 3.1, 95, 0.2, 'OK'],
+        ['Feb 2026', 'Vindhya Engineering Works', 5.8, 91, 0.4, 'OK'],
+        ['Jan 2026', 'Bundelkhand Fabricators', 2.9, 100, 0.0, 'OK'],
+      ],
+    },
+
+    // Management pack
+    {
+      key: 'monthly-management-pack', name: 'Monthly MIS Management Pack', group: 'Management',
+      description: 'Consolidated leadership KPI pack — actual vs target, month-wise.',
+      columns: ['Month', 'KPI', 'Actual', 'Target', 'Status'],
+      rows: [
+        ['Mar 2026', 'Procurement Spend (₹ Cr)', 430, 420, 'Over'],
+        ['Mar 2026', 'Coal Rake OTIF', '91.4%', '95%', 'Below'],
+        ['Mar 2026', 'Coal Stock (days)', 11.5, 12, 'Below'],
+        ['Mar 2026', 'PO Cycle Time (days)', 9.2, 7, 'Below'],
+        ['Mar 2026', 'Inventory Turnover', '3.8x', '4.0x', 'Below'],
+        ['Feb 2026', 'Procurement Spend (₹ Cr)', 407, 415, 'Under'],
+        ['Feb 2026', 'Coal Rake OTIF', '92.1%', '95%', 'Below'],
+        ['Feb 2026', 'Coal Stock (days)', 12.4, 12, 'On Track'],
+        ['Jan 2026', 'Procurement Spend (₹ Cr)', 463, 420, 'Over'],
+        ['Jan 2026', 'Coal Stock (days)', 13.1, 12, 'On Track'],
       ],
     },
   ],

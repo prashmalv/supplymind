@@ -1,8 +1,10 @@
-import { ExecutiveMis, ProcurementMis, InventoryMis, MisAlert, ReportTable, ForecastMis } from '@supplymind/shared';
+import { ExecutiveMis, ProcurementMis, InventoryMis, MisAlert, ReportTable, ForecastMis, OrgUnit } from '@supplymind/shared';
 
 /** A complete per-organization sample dataset used to drive the demo MIS. */
 export interface SiteDataset {
   key: string;
+  /** Operating companies / units and the plants they own (Unit → Location). */
+  units?: OrgUnit[];
   executive: ExecutiveMis;
   procurement: ProcurementMis;
   inventory: InventoryMis;

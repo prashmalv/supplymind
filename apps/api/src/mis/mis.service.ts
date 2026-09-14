@@ -16,10 +16,12 @@ export class MisService {
     return (await this.datasetForOrg(orgId)).executive;
   }
   async procurement(orgId: string) {
-    return (await this.datasetForOrg(orgId)).procurement;
+    const ds = await this.datasetForOrg(orgId);
+    return { ...ds.procurement, units: ds.units };
   }
   async inventory(orgId: string) {
-    return (await this.datasetForOrg(orgId)).inventory;
+    const ds = await this.datasetForOrg(orgId);
+    return { ...ds.inventory, units: ds.units };
   }
   async alerts(orgId: string) {
     return (await this.datasetForOrg(orgId)).alerts;
@@ -28,7 +30,8 @@ export class MisService {
     return (await this.datasetForOrg(orgId)).reports ?? [];
   }
   async forecast(orgId: string) {
-    return (await this.datasetForOrg(orgId)).forecast ?? null;
+    const ds = await this.datasetForOrg(orgId);
+    return ds.forecast ? { ...ds.forecast, units: ds.units } : null;
   }
   async aiContext(orgId: string) {
     return (await this.datasetForOrg(orgId)).aiContext;
