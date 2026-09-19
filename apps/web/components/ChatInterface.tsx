@@ -10,7 +10,7 @@ export const ChatInterface: React.FC = () => {
     {
       id: '1',
       role: 'model',
-      text: "Welcome to **RLAI SupplyMind**. Ask me about coal stock, procurement spend, vendor performance or inventory risks — or 📎 **attach a PDF** (contract, tender, spec) or an image and ask questions about it.",
+      text: "Welcome to **RLAI SupplyMind**. Ask me about coal stock, procurement spend, vendor performance or inventory risks. I can also **build a custom report for you** — combine columns from different reports, or filter a subset — and give you a **CSV / Excel to download**. Or 📎 **attach a PDF** (contract, tender, spec) and ask questions about it.\n\nTry: *\"Build an Excel of overdue POs with vendor, material and value\"* or *\"Combine each vendor's on-time % with their outstanding dues.\"*",
       timestamp: new Date()
     }
   ]);
@@ -248,16 +248,16 @@ export const ChatInterface: React.FC = () => {
   };
 
   const predictivePrompts = [
-    "Show purchase value for this month",
+    "Build an Excel of overdue POs with vendor, material and value",
+    "Combine each vendor's on-time % with their outstanding dues",
+    "Export below-safety-stock items for Lalitpur as a report",
+    "Filter contracts & bank guarantees expiring in 30 days into one report",
     "Which vendor has the highest procurement value?",
-    "List contracts expiring within 60 days",
     "Chart our procurement spend by category",
     "Show approval-pending cases by stage",
     "Which critical spares may stock out in the next 30 days?",
     "Chart coal stock days for each plant",
-    "Show non-moving inventory for the last 12 months",
     "Show top open POs that are overdue",
-    "What is our MSME outstanding?",
     "Which SAP MM tables power the coal stock KPI?",
     "Give me the management KPI scorecard",
   ];

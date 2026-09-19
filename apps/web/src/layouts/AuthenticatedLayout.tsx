@@ -3,7 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   MessageSquareText, Layers,
   ShoppingCart, Boxes, Plug, ChevronDown, LogOut, Settings, Sun, Moon, FileText,
-  Menu, PanelLeftClose, PanelLeftOpen, KeyRound, Database, TrendingUp,
+  Menu, PanelLeftClose, PanelLeftOpen, KeyRound, Database, TrendingUp, LayoutDashboard,
 } from 'lucide-react';
 import { Permission } from '@supplymind/shared';
 import { useAuth } from '../auth/AuthProvider';
@@ -11,6 +11,7 @@ import { can } from '../lib/rbac';
 import { useTheme } from '../theme/ThemeProvider';
 import { FloatingAssistant } from '../components/assistant/FloatingAssistant';
 import { ChangePasswordModal } from '../components/ChangePasswordModal';
+import rlaiLogo from '../../logo/rlailogo.png';
 
 const ThemeToggle: React.FC = () => {
   const { theme, toggle } = useTheme();
@@ -33,6 +34,7 @@ interface NavDef {
 }
 
 const PRIMARY: NavDef[] = [
+  { to: '/my-dashboard', label: 'My Dashboard', icon: <LayoutDashboard size={18} />, perm: 'kpi:read' },
   { to: '/procurement', label: 'Procurement MIS', icon: <ShoppingCart size={18} />, perm: 'kpi:read' },
   { to: '/inventory', label: 'Inventory MIS', icon: <Boxes size={18} />, perm: 'kpi:read' },
   { to: '/forecast-inventory', label: 'Forecasting', icon: <TrendingUp size={18} />, perm: 'kpi:read' },
@@ -198,15 +200,12 @@ export const AuthenticatedLayout: React.FC = () => {
     <div className="min-h-screen flex bg-slate-100 text-slate-800 dark:bg-[#020617] dark:text-slate-200 font-sans">
       {/* Sidebar */}
       <aside className={`fixed lg:sticky top-0 h-screen z-50 flex flex-col border-r border-slate-200 dark:border-white/10 bg-white dark:bg-[#070c1a] transition-all duration-200 ${collapsed ? 'w-[68px]' : 'w-60'} ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
-        <div className={`flex items-center h-16 border-b border-slate-200 dark:border-white/10 ${collapsed ? 'justify-center px-0' : 'px-4 gap-3'}`}>
-          <div className="w-9 h-9 relative flex items-center justify-center flex-shrink-0">
-            <div className="absolute inset-0 bg-gradient-to-tr from-red-600 to-red-500 rounded-xl blur-[2px] opacity-70"></div>
-            <div className="relative w-full h-full bg-gradient-to-tr from-slate-900 to-slate-800 rounded-xl border border-white/10 flex items-center justify-center font-bold text-xl text-red-500">R</div>
-          </div>
+        <div className={`flex items-center h-16 border-b border-slate-200 dark:border-white/10 ${collapsed ? 'justify-center px-0' : 'px-4 gap-2.5'}`}>
+          <img src={rlaiLogo} alt="RLAI" className={`w-auto flex-shrink-0 ${collapsed ? 'h-7' : 'h-9'}`} />
           {!collapsed && (
             <div className="leading-tight">
-              <h1 className="text-base font-bold tracking-tight text-slate-900 dark:text-white">RLAI SupplyMind</h1>
-              <p className="text-[9px] text-slate-500 uppercase tracking-widest font-semibold">Enterprise Platform</p>
+              <h1 className="text-base font-bold tracking-tight text-slate-900 dark:text-white">SupplyMind</h1>
+              <p className="text-[9px] text-slate-500 dark:text-slate-400 font-medium">Making your chain intelligent</p>
             </div>
           )}
         </div>

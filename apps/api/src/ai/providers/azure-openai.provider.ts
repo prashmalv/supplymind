@@ -44,8 +44,8 @@ export class AzureOpenAiProvider implements LlmProvider {
         }
         return { role: m.role, content: m.content };
       }),
-      temperature: 0.3,
-      max_tokens: 1200,
+      temperature: 0.2,
+      max_tokens: 2500,
     };
 
     const res = await fetch(url, {

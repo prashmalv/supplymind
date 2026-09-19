@@ -9,6 +9,7 @@ import { Placeholder } from './src/pages/Placeholder';
 import { ProcurementMISPage } from './src/pages/ProcurementMISPage';
 import { InventoryMISPage } from './src/pages/InventoryMISPage';
 import { InventoryForecastPage } from './src/pages/InventoryForecastPage';
+import { CustomDashboardPage } from './src/pages/CustomDashboardPage';
 import { ReportsPage } from './src/pages/ReportsPage';
 import { ConnectorsPage } from './src/pages/ConnectorsPage';
 import { AdminPage } from './src/pages/AdminPage';
@@ -69,6 +70,7 @@ const App: React.FC = () => {
         <Route path="/home" element={<HomeRoute />} />
         <Route path="/dashboard" element={<Navigate to="/procurement" replace />} />
         <Route path="/procurement" element={<ProcurementMISPage />} />
+        <Route path="/my-dashboard" element={<CustomDashboardPage />} />
         <Route path="/inventory" element={<InventoryMISPage />} />
         <Route path="/forecast-inventory" element={<InventoryForecastPage />} />
         <Route path="/reports" element={<ReportsPage />} />

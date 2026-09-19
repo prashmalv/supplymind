@@ -46,6 +46,34 @@ export class AiService {
       onTimePctByVendor: ds.procurement.onTimeByVendor,
       spendByVendor: ds.procurement.topVendors.map((v) => ({ name: v.vendor, value: v.spend })),
     };
+    // Structured tabular data the model may combine / filter into custom reports.
+    const dataCatalog = {
+      readyReports: (ds.reports ?? []).map((r) => ({ name: r.name, group: r.group, columns: r.columns, rows: r.rows })),
+      procurement: {
+        openPurchaseOrders: ds.procurement.openPos,
+        vendors: ds.procurement.topVendors,
+        onTimeByVendor: ds.procurement.onTimeByVendor,
+        contractExpiry: ds.procurement.contractExpiry,
+        bankGuarantees: ds.procurement.bankGuarantees,
+        vendorOutstanding: ds.procurement.vendorOutstanding,
+        approvalPending: ds.procurement.approvalPending,
+        prPoAging: ds.procurement.prPoAging,
+        budgetVsActual: ds.procurement.budgetVsActual,
+        monthlySpend: ds.procurement.monthlySpend,
+      },
+      inventory: {
+        stockItems: ds.inventory.items,
+        criticalSpares: ds.inventory.criticalSpares,
+        deadStock: ds.inventory.deadStock?.items,
+        scrap: ds.inventory.scrap,
+        coalStockByPlant: ds.inventory.coalStockByPlant,
+      },
+      forecast: ds.forecast?.materials?.map((m) => ({
+        material: m.material, code: m.code, category: m.category, plant: m.plant, method: m.method,
+        mape: m.mape, currentStock: m.currentStock, safetyStock: m.safetyStock, recommendedSafety: m.recommendedSafety,
+        reorderPoint: m.reorderPoint, leadTimeDays: m.leadTimeDays, stockoutInDays: m.stockoutInDays, recommendedOrderQty: m.recommendedOrderQty, status: m.status,
+      })),
+    };
     return (
       ds.aiContext +
       '\n\nFORMATTING RULES:\n' +
@@ -58,6 +86,28 @@ export class AiService {
       '- Use type "bar" for comparisons/breakdowns and "line" for trends over time. Use ONLY the exact figures below; never invent numbers. Put a short sentence of prose before the chart. Do not add a chart unless a visual was requested.\n' +
       'CHART DATA (exact figures, currency in ₹ Crore where monetary):\n' +
       JSON.stringify(chartData) +
+      '\n\nREPORT / EXPORT BUILDER (IMPORTANT — follow exactly):\n' +
+      '- TRIGGER: any request to build, create, generate, make, prepare, combine, merge, join, filter, subset, "list out", export, download, or produce a report / table / Excel / CSV / spreadsheet / dataset.\n' +
+      '- On a trigger you MUST reply with ONE short sentence (name of the report + row count), then EXACTLY ONE fenced code block labelled report, on its own lines, containing JSON of this exact shape:\n' +
+      '```report\n{"filename":"overdue-pos","title":"Overdue Purchase Orders","columns":["PO Number","Vendor","Material","Value (Cr)","Days Overdue"],"rows":[["45010023","Northern Coalfields Ltd","Steam Coal G11 (rakes)",118.5,3]]}\n```\n' +
+      '- CRITICAL: every cell MUST be copied from the DATA CATALOG below. NEVER output "TBD", "-", blanks, guesses, rounded-off names, or example values. If a value is not in the catalog, leave that row out. Do NOT use figures from the narrative above — only the catalog arrays.\n' +
+      '- COMBINE by joining on a shared key (vendor name, material code, PO number, plant, month). FILTER by keeping only rows meeting the user\'s condition (e.g. status == "overdue", onHand < safetyStock, a named plant, a given month).\n' +
+      '- Numbers stay numeric (no ₹ or unit text inside a numeric cell); put units in the column header. The app renders the block as a table with Download CSV and Download Excel buttons.\n' +
+      '- Only skip the report block if the user clearly wants to just read 2–3 values (then use a small markdown table). If none of the requested fields exist in the catalog, say so in one line and emit no block.\n' +
+      'CATALOG FIELD GUIDE (use these exact source fields):\n' +
+      '- procurement.openPurchaseOrders[]: poNumber, vendor, material, plant, value, deliveryDate, daysOverdue, status ("overdue"|"due_soon"|"on_track")\n' +
+      '- procurement.vendors[]: vendor, category, spend, onTimePct, qualityPct, reliability, poCount\n' +
+      '- procurement.contractExpiry[]: contract, vendor, material, expiryDate, daysLeft, value, window\n' +
+      '- procurement.bankGuarantees[]: vendor, bgNo, amount, expiryDate, status\n' +
+      '- procurement.vendorOutstanding[]: vendor, outstanding, advance, msme\n' +
+      '- procurement.approvalPending[]: stage, count, amount\n' +
+      '- inventory.stockItems[]: material, code, category, plant, onHand, uom, safetyStock, reorderPoint, daysOfSupply, value, abcClass, xyzClass, status\n' +
+      '- inventory.criticalSpares[]: material, code, plant, onHand, daysCover, status\n' +
+      '- inventory.deadStock[]: material, code, plant, value, monthsNoMovement\n' +
+      '- forecast[]: material, code, category, plant, method, mape, currentStock, safetyStock, recommendedSafety, reorderPoint, leadTimeDays, stockoutInDays, recommendedOrderQty, status\n' +
+      '- readyReports[]: {name, columns, rows} — pre-built report tables you can slice, filter or combine.\n' +
+      'DATA CATALOG (exact rows; amounts in ₹ Crore unless the field name says otherwise):\n' +
+      JSON.stringify(dataCatalog) +
       (suffix ? '\n' + suffix : '')
     );
   }

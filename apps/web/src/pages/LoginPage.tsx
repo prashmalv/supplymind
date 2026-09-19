@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { ShieldCheck, Loader2 } from 'lucide-react';
 import { useAuth } from '../auth/AuthProvider';
+import rlaiLogo from '../../logo/rlailogo.png';
 
 export const LoginPage: React.FC = () => {
   const { login, status } = useAuth();
@@ -34,16 +35,11 @@ export const LoginPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-[#020617] dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-slate-900 dark:via-[#020617] dark:to-[#020617] px-4">
       <div className="w-full max-w-md liquid-card rounded-2xl p-8">
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-11 h-11 relative flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-tr from-red-600 to-red-500 rounded-xl blur-[2px] opacity-70"></div>
-            <div className="relative w-full h-full bg-gradient-to-tr from-slate-900 to-slate-800 rounded-xl border border-white/10 flex items-center justify-center font-bold text-xl text-red-500">
-              R
-            </div>
-          </div>
+          <img src={rlaiLogo} alt="RLAI" className="h-11 w-auto flex-shrink-0" />
           <div>
-            <h1 className="text-xl font-bold text-slate-900 dark:text-white">RLAI SupplyMind</h1>
-            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">
-              Enterprise Platform
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white leading-tight">SupplyMind</h1>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+              Making your chain intelligent
             </p>
           </div>
         </div>
