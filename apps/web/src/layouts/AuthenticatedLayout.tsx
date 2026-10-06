@@ -3,7 +3,7 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   MessageSquareText, Layers,
   ShoppingCart, Boxes, Plug, ChevronDown, LogOut, Settings, Sun, Moon, FileText,
-  Menu, PanelLeftClose, PanelLeftOpen, KeyRound, Database, TrendingUp, LayoutDashboard,
+  Menu, PanelLeftClose, PanelLeftOpen, KeyRound, Database, TrendingUp, LayoutDashboard, FileCheck2,
 } from 'lucide-react';
 import { Permission } from '@supplymind/shared';
 import { useAuth } from '../auth/AuthProvider';
@@ -38,6 +38,7 @@ const PRIMARY: NavDef[] = [
   { to: '/procurement', label: 'Procurement MIS', icon: <ShoppingCart size={18} />, perm: 'kpi:read' },
   { to: '/inventory', label: 'Inventory MIS', icon: <Boxes size={18} />, perm: 'kpi:read' },
   { to: '/forecast-inventory', label: 'Forecasting', icon: <TrendingUp size={18} />, perm: 'kpi:read' },
+  { to: '/invoice-matching', label: 'Invoice Matching', icon: <FileCheck2 size={18} />, perm: 'kpi:read' },
   { to: '/reports', label: 'MIS Reports', icon: <FileText size={18} />, perm: 'kpi:read' },
   { to: '/sap-mapping', label: 'SAP Mapping', icon: <Database size={18} />, perm: 'kpi:read' },
 ];

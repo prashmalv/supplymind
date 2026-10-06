@@ -41,4 +41,10 @@ export class MisController {
   forecast(@CurrentOrg() orgId: string) {
     return this.mis.forecast(orgId);
   }
+
+  @Get('matching')
+  @RequirePermissions('kpi:read')
+  matching(@CurrentOrg() orgId: string) {
+    return this.mis.matching(orgId);
+  }
 }

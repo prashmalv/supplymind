@@ -712,6 +712,39 @@ export const bajajEnergyDataset: SiteDataset = {
     ],
   },
 
+  matching: {
+    currency: CUR,
+    kpis: [
+      { label: 'Invoices Processed', value: '142', raw: 142, delta: '+18', status: 'neutral', sublabel: 'MTD' },
+      { label: 'Auto-match Rate', value: '82%', raw: 82, delta: '+4%', status: 'positive', sublabel: '3-way clean' },
+      { label: 'Open Exceptions', value: '3', raw: 3, status: 'negative', sublabel: 'need review' },
+      { label: 'Value in Exception', value: '₹3.9 Cr', raw: 3.9, status: 'warning' },
+      { label: 'GR/IR Pending', value: '1', raw: 1, status: 'warning', sublabel: 'invoice before GRN' },
+      { label: 'Avg Match Time', value: '1.4 min', raw: 1.4, delta: '-6.1 min', status: 'positive', sublabel: 'vs manual' },
+    ],
+    purchaseOrders: [
+      { poNumber: '45020031', vendor: 'BHEL', plant: 'Lalitpur', date: '2026-02-18', lines: [{ material: 'Boiler Feed Pump Cartridge', code: 'BFP-CART-660', uom: 'NO', orderedQty: 2, unitPrice: 3400000 }] },
+      { poNumber: '45020032', vendor: 'Thermax', plant: 'Lalitpur', date: '2026-02-22', lines: [{ material: 'FGD Limestone', code: 'FGD-LIME', uom: 'MT', orderedQty: 8000, unitPrice: 2500 }] },
+      { poNumber: '45020033', vendor: 'Ion Exchange India', plant: 'Barkhera', date: '2026-02-25', lines: [{ material: 'Cation Exchange Resin', code: 'RESIN-CAT', uom: 'M3', orderedQty: 5, unitPrice: 850000 }] },
+      { poNumber: '45020034', vendor: 'Siemens Energy', plant: 'Lalitpur', date: '2026-03-02', lines: [{ material: 'Turbine Blade Set (Stage-3)', code: 'TB-BLADE-S3', uom: 'SET', orderedQty: 1, unitPrice: 12400000 }] },
+      { poNumber: '45020035', vendor: 'Northern Coalfields Ltd', plant: 'Lalitpur', date: '2026-03-05', lines: [{ material: 'Steam Coal G11', code: 'COAL-G11', uom: 'MT', orderedQty: 60000, unitPrice: 5200 }] },
+    ],
+    goodsReceipts: [
+      { grnNumber: '50080021', poNumber: '45020031', date: '2026-03-01', lines: [{ code: 'BFP-CART-660', receivedQty: 2 }] },
+      { grnNumber: '50080022', poNumber: '45020032', date: '2026-03-06', lines: [{ code: 'FGD-LIME', receivedQty: 8000 }] },
+      { grnNumber: '50080023', poNumber: '45020033', date: '2026-03-09', lines: [{ code: 'RESIN-CAT', receivedQty: 3 }] },
+      // PO 45020034 (Siemens) has NO goods receipt yet — invoice arrived before delivery (GR/IR).
+      { grnNumber: '50080025', poNumber: '45020035', date: '2026-03-11', lines: [{ code: 'COAL-G11', receivedQty: 60000 }] },
+    ],
+    sampleInvoices: [
+      { invoiceNo: 'BHEL/2026/0442', vendor: 'BHEL', poNumber: '45020031', date: '2026-03-04', note: 'Clean 3-way match', lines: [{ material: 'Boiler Feed Pump Cartridge', code: 'BFP-CART-660', qty: 2, unitPrice: 3400000 }] },
+      { invoiceNo: 'THX/INV/5571', vendor: 'Thermax', poNumber: '45020032', date: '2026-03-08', note: 'Price 10% above PO', lines: [{ material: 'FGD Limestone', code: 'FGD-LIME', qty: 8000, unitPrice: 2750 }] },
+      { invoiceNo: 'IEI/26/1180', vendor: 'Ion Exchange India', poNumber: '45020033', date: '2026-03-10', note: 'Billed qty > received (short delivery)', lines: [{ material: 'Cation Exchange Resin', code: 'RESIN-CAT', qty: 5, unitPrice: 850000 }] },
+      { invoiceNo: 'SIE/2026/3302', vendor: 'Siemens Energy', poNumber: '45020034', date: '2026-03-07', note: 'Invoice before goods receipt (GR/IR)', lines: [{ material: 'Turbine Blade Set (Stage-3)', code: 'TB-BLADE-S3', qty: 1, unitPrice: 12400000 }] },
+      { invoiceNo: 'NCL/CL/88211', vendor: 'Northern Coalfields Ltd', poNumber: '45020035', date: '2026-03-12', note: 'Within price tolerance', lines: [{ material: 'Steam Coal G11', code: 'COAL-G11', qty: 60000, unitPrice: 5206 }] },
+    ],
+  },
+
   aiContext: `You are advising Bajaj Energy (with Lalitpur Power Generation Co / LPGCL), India's largest private-sector thermal generator in Uttar Pradesh — ~2,430 MW: Lalitpur 3x660 MW supercritical plus five 90 MW plants (Barkhera, Maqsoodapur, Khambarkhera, Kundarkhi, Utraula). Focus on coal-based procurement & inventory MIS from SAP MM.
 KEY FACTS (illustrative):
 - Generation MTD 1,284 MU (plan 1,245); Fleet PLF 64.8%.

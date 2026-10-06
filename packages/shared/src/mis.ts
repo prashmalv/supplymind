@@ -262,6 +262,46 @@ export interface ForecastMis {
   materials: MaterialForecast[];
 }
 
+// ---- Invoice ↔ PO ↔ GRN 3-way matching (SAP MIRO / GR-IR) ----
+
+export interface PoLine {
+  material: string;
+  code: string;
+  uom: string;
+  orderedQty: number;
+  unitPrice: number;   // in base currency units (₹), not Crore
+}
+export interface MatchPurchaseOrder {
+  poNumber: string;
+  vendor: string;
+  plant: string;
+  date: string;
+  lines: PoLine[];
+}
+export interface GoodsReceiptLine { code: string; receivedQty: number; }
+export interface GoodsReceipt {
+  grnNumber: string;
+  poNumber: string;
+  date: string;
+  lines: GoodsReceiptLine[];
+}
+export interface SampleInvoiceLine { material: string; code: string; qty: number; unitPrice: number; }
+export interface SampleInvoice {
+  invoiceNo: string;
+  vendor: string;
+  poNumber: string;
+  date: string;
+  note?: string;           // short label of the demo scenario
+  lines: SampleInvoiceLine[];
+}
+export interface MatchingMis {
+  currency: string;
+  kpis: KpiTile[];
+  purchaseOrders: MatchPurchaseOrder[];
+  goodsReceipts: GoodsReceipt[];
+  sampleInvoices: SampleInvoice[];
+}
+
 // ---- Operational MIS Reports (SOW section C) ----
 
 export interface ReportTable {

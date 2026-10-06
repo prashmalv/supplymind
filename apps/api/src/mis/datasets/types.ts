@@ -1,4 +1,4 @@
-import { ExecutiveMis, ProcurementMis, InventoryMis, MisAlert, ReportTable, ForecastMis, OrgUnit } from '@supplymind/shared';
+import { ExecutiveMis, ProcurementMis, InventoryMis, MisAlert, ReportTable, ForecastMis, OrgUnit, MatchingMis } from '@supplymind/shared';
 
 /** A complete per-organization sample dataset used to drive the demo MIS. */
 export interface SiteDataset {
@@ -13,6 +13,8 @@ export interface SiteDataset {
   reports?: ReportTable[];
   /** Inventory / demand forecasting. */
   forecast?: ForecastMis;
+  /** Invoice ↔ PO ↔ GRN 3-way matching. */
+  matching?: MatchingMis;
   /** Concise sector briefing used to ground the conversational AI. */
   aiContext: string;
 }
