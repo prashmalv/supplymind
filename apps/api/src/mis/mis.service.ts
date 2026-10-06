@@ -33,6 +33,9 @@ export class MisService {
     const ds = await this.datasetForOrg(orgId);
     return ds.forecast ? { ...ds.forecast, units: ds.units } : null;
   }
+  async matching(orgId: string) {
+    return (await this.datasetForOrg(orgId)).matching ?? null;
+  }
   async aiContext(orgId: string) {
     return (await this.datasetForOrg(orgId)).aiContext;
   }

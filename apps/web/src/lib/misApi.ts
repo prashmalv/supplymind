@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ExecutiveMis, ProcurementMis, InventoryMis, MisAlert, ReportTable, ForecastMis } from '@supplymind/shared';
+import { ExecutiveMis, ProcurementMis, InventoryMis, MisAlert, ReportTable, ForecastMis, MatchingMis } from '@supplymind/shared';
 import { api } from './apiClient';
 import { useAuth } from '../auth/AuthProvider';
 
@@ -55,6 +55,15 @@ export function useForecastMis() {
   return useQuery({
     queryKey: ['mis', 'forecast', currentOrgId],
     queryFn: () => api.get<ForecastMis | null>('/mis/forecast'),
+    enabled: !!currentOrgId,
+  });
+}
+
+export function useMatchingMis() {
+  const { currentOrgId } = useAuth();
+  return useQuery({
+    queryKey: ['mis', 'matching', currentOrgId],
+    queryFn: () => api.get<MatchingMis | null>('/mis/matching'),
     enabled: !!currentOrgId,
   });
 }

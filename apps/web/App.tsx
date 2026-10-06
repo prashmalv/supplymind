@@ -10,6 +10,7 @@ import { ProcurementMISPage } from './src/pages/ProcurementMISPage';
 import { InventoryMISPage } from './src/pages/InventoryMISPage';
 import { InventoryForecastPage } from './src/pages/InventoryForecastPage';
 import { CustomDashboardPage } from './src/pages/CustomDashboardPage';
+import { InvoiceMatchingPage } from './src/pages/InvoiceMatchingPage';
 import { ReportsPage } from './src/pages/ReportsPage';
 import { ConnectorsPage } from './src/pages/ConnectorsPage';
 import { AdminPage } from './src/pages/AdminPage';
@@ -73,6 +74,7 @@ const App: React.FC = () => {
         <Route path="/my-dashboard" element={<CustomDashboardPage />} />
         <Route path="/inventory" element={<InventoryMISPage />} />
         <Route path="/forecast-inventory" element={<InventoryForecastPage />} />
+        <Route path="/invoice-matching" element={<InvoiceMatchingPage />} />
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/sap-mapping" element={<SapMappingPage />} />
         <Route path="/forecast" element={<ForecastDashboard />} />

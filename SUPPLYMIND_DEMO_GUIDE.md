@@ -114,13 +114,15 @@ Two things work on **every** page — lead with them once, then they impress by 
 **Left sidebar — what each page is for:**
 
 - **Login.** Clean sign-in. Say: "Role-based — each user sees only what they're allowed."
+- **My Dashboard.** A personal board each user builds: add widgets from a catalog (KPIs/charts/tables), describe a widget in plain words, or pin any Knowledge Bot chart/report; move/resize/remove, saved per org. _Talking point:_ "Every user builds the dashboard they need."
 - **Procurement MIS.** Spend, coal spend share, PO cycle time, rake OTIF, open POs, budget vs actual, savings, vendor scorecard, PR/PO aging, contract & BG expiry, MSME dues. _Click:_ Spend-by-Plant bar → that plant's open POs; Budget-vs-Actual bar → variance. _Talking point:_ "Every rupee of committed spend, one click from the PO detail." Maps to SAP EKKO/EKPO/EBAN/LFA1.
 - **Inventory MIS.** Inventory value, coal stock days by plant (vs CEA norm), turnover, below-safety items, ABC/XYZ, VED, FSN, aging, dead stock, scrap, critical spares. _Click:_ an ABC/XYZ cell → the items in it; the coal chart → per-plant detail. _Talking point:_ "Coal-stock-days risk and dead stock, live, without a single Excel." Maps to MARD/MARC/MBEW/MSEG.
 - **Forecasting.** Demand forecast per material with a 95% confidence band, stock-out prediction, and AI-recommended safety stock vs the SAP value, with an accuracy (MAPE) score. _Talking point:_ "Not just what happened — what to order next, and when it will run out."
+- **Invoice Matching.** SAP MIRO-style **3-way match** — Invoice ↔ PO ↔ GRN. Pick a sample invoice (or upload a PDF; AI extracts the fields) and it auto-flags price variance, qty-over-receipt, and invoice-before-GRN (GR/IR), then Approve/Hold/Reject. _Demo:_ run the 5 samples (clean match, price +10%, short delivery, no GRN, within tolerance). _Talking point:_ "Catches the overcharge and the short delivery before you pay — the match math is computed, not guessed."
 - **Operational Reports.** The monthly MIS pack as ready reports (stock statement, consumption vs budget, PO/GRN registers, vendor performance, payment ageing, MSME, management scorecard) — each opens full-width with search, month filter and export. _Talking point:_ "The reports your team builds by hand each month — already made, filterable, exportable."
 - **SAP Mapping.** The table from Section 4, on screen: each dashboard figure ↔ its SAP MM table/field. _Talking point (to the SAP person):_ "Here is exactly where each number comes from in your SAP."
 - **What-If.** Change an assumption (e.g. coal price, lead time) and see the impact — a planning sandbox.
-- **Knowledge Bot.** The AI assistant (see Section 6).
+- **Knowledge Bot.** The AI assistant (see Section 6). Also a **report builder**: ask it to combine columns from different reports or filter a subset, and download the result as CSV or real Excel (.xlsx) — and pin it to My Dashboard.
 - **Connectors.** Cards for SAP ECC, SQL, Oracle, cloud storage with a "Connect" flow — shows _how_ integration will be set up. Say: "Demo of the connect experience; real wiring is the next phase."
 - **Admin.** Add users, set page/permission access, see who created whom, audit trail; every user can change their own password. _Talking point:_ "IT stays in control — roles, permissions, and an audit trail."
 
